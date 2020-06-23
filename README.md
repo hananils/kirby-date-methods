@@ -40,7 +40,7 @@ Returns a `DateTimeImmutable` representation of the field value, see [supported 
 $page->date()->toDateTimeImmutable()
 ```
 
-### toDateIntervae()
+### toDateIntervale()
 
 Returns a `DateInterval` representation of the field value, see [supported formats](https://www.php.net/manual/en/dateinterval.construct.php).
 
