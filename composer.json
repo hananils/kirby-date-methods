@@ -1,22 +1,17 @@
 {
-    "name": "getkirby/pluginkit",
-    "description": "Kirby Example Plugin",
+    "name": "hananils/kirby-date-methods",
+    "description": "Kirby 3 plugin providing field and page methods for formatting dates and creating PHP date objects.",
     "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
         {
-            "name": "Your Name",
-            "email": "you@example.com"
+            "name": "hana+nils · Büro für Gestaltung",
+            "email": "buero@hananils.de"
         }
     ],
     "require": {
         "getkirby/composer-installer": "^1.1",
         "openpsa/ranger": "^0.5.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Superwoman\\Superplugin\\": "src/"
-        }
     },
     "config": {
         "optimize-autoloader": true
