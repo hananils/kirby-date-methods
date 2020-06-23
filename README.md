@@ -75,7 +75,7 @@ $page->date()->toRelative('next Monday');
 
 ### toCurrentYear()
 
-Creates a `DateTime` representation of th field value and returns it with the year set to the current one.
+Creates a `DateTime` representation of the field value and returns it with the year set to the current one.
 
 ```php
 $page->date()->toCurrentYear();
@@ -83,7 +83,7 @@ $page->date()->toCurrentYear();
 
 ### toCurrentMonth()
 
-Creates a `DateTime` representation of th field value and returns it with the month set to the current one.
+Creates a `DateTime` representation of the field value and returns it with the month set to the current one.
 
 ```php
 $page->date()->toCurrentMonth();
@@ -91,7 +91,7 @@ $page->date()->toCurrentMonth();
 
 ### toCurrentDay()
 
-Creates a `DateTime` representation of th field value and returns it with the day set to the current one.
+Creates a `DateTime` representation of the field value and returns it with the day set to the current one.
 
 ```php
 $page->date()->toCurrentDay();
