@@ -40,7 +40,7 @@ Returns a `DateTimeImmutable` representation of the field value, see [supported 
 $page->date()->toDateTimeImmutable()
 ```
 
-### toDateIntervale()
+### toDateInterval()
 
 Returns a `DateInterval` representation of the field value, see [supported formats](https://www.php.net/manual/en/dateinterval.construct.php).
 
@@ -48,7 +48,7 @@ Returns a `DateInterval` representation of the field value, see [supported forma
 $page->date()->toDateInterval()
 ```
 
-### toDateDiff(\$to)
+### toDateDiff($to)
 
 Returns a `DateInterval` object representing the difference between the field's date and the given date. The provided date can either be a `DateTime` object or a PHP-readable string, defaults to the difference to now.
 
