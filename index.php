@@ -84,6 +84,15 @@ Kirby::plugin('hananils/date-methods', [
 
             return dateFormatted($locale, $field->toDateTime(), $datetype, $timetype, $timezone, $calendar, $pattern);
         },
+        'toFormattedPattern' => function ($field, $pattern = 'MMMM y') {
+            return $field->toFormatted(
+                IntlDateFormatter::LONG,
+                IntlDateFormatter::NONE,
+                null,
+                null,
+                $pattern
+            );
+        },
         'toRelative' => function ($field, $from = 'now') {
             return dateRelative($field->value(), $from);
         },
