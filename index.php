@@ -111,7 +111,7 @@ Kirby::plugin('hananils/date-methods', [
 
             return $current;
         },
-        'toAge' => function ($field, $on = 'today', $format = '%Y') {
+        'toAge' => function ($field, $on = 'today', $format = '%y') {
             $birthday = new DateTime($field->value());
             $on = new DateTime($on);
             $diff = $birthday->diff($on);
