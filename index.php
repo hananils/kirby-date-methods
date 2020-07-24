@@ -325,3 +325,42 @@ function datetime($datetime = 'now')
 
     return new DateTime($datetime);
 }
+
+function normalizeDate($string)
+{
+    if (empty($string)) {
+        return $string;
+    }
+
+    if (preg_match('/\d\d\d\d-\d\d-\d\d/', $string)) {
+        return $string;
+    }
+
+    $formatter = new IntlDateFormatter(
+        'de-DE',
+        IntlDateFormatter::SHORT,
+        IntlDateFormatter::NONE
+    );
+
+    $timestamp = $formatter->parse($string);
+
+    return date('Y-m-d', $timestamp);
+}
+
+function normalizeTime($string)
+{
+    if (empty($string)) {
+        return $string;
+    }
+
+    $string = str_replace('.', ':', $string);
+    $string = preg_replace('/[^0-9:]/', '', $string);
+
+    if (preg_match('/\d\d:\d\d/', $string)) {
+        return $string;
+    }
+
+    $timestamp = strtotime($string);
+
+    return date('H:i', $timestamp);
+}
