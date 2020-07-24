@@ -71,9 +71,18 @@ Kirby::plugin('hananils/date-methods', [
 
             return $from->diff($to);
         },
-        'toFormatted' => function ($field, $datetype = IntlDateFormatter::LONG, $timetype = IntlDateFormatter::NONE, $timezone = null, $calendar = null, $pattern = "") {
+        'toFormatted' => function (
+            $field,
+            $datetype = IntlDateFormatter::LONG,
+            $timetype = IntlDateFormatter::NONE,
+            $timezone = null,
+            $calendar = null,
+            $pattern = ''
+        ) {
             if (kirby()->language()) {
-                $locale = kirby()->language()->locale(LC_ALL);
+                $locale = kirby()
+                    ->language()
+                    ->locale(LC_ALL);
             } else {
                 $locale = option('locale');
 
@@ -82,7 +91,15 @@ Kirby::plugin('hananils/date-methods', [
                 }
             }
 
-            return dateFormatted($locale, $field->toDateTime(), $datetype, $timetype, $timezone, $calendar, $pattern);
+            return dateFormatted(
+                $locale,
+                $field->toDateTime(),
+                $datetype,
+                $timetype,
+                $timezone,
+                $calendar,
+                $pattern
+            );
         },
         'toFormattedPattern' => function ($field, $pattern = 'MMMM y') {
             return $field->toFormatted(
@@ -100,7 +117,11 @@ Kirby::plugin('hananils/date-methods', [
             $today = new DateTime();
             $date = $field->toDateTime();
             $current = new DateTime();
-            $current->setDate($today->format('Y'), $date->format('m'), $date->format('d'));
+            $current->setDate(
+                $today->format('Y'),
+                $date->format('m'),
+                $date->format('d')
+            );
 
             return $current;
         },
@@ -108,7 +129,11 @@ Kirby::plugin('hananils/date-methods', [
             $today = new DateTime();
             $date = $field->toDateTime();
             $current = new DateTime();
-            $current->setDate($date->format('Y'), $today->format('m'), $date->format('d'));
+            $current->setDate(
+                $date->format('Y'),
+                $today->format('m'),
+                $date->format('d')
+            );
 
             return $current;
         },
@@ -116,7 +141,11 @@ Kirby::plugin('hananils/date-methods', [
             $today = new DateTime();
             $date = $field->toDateTime();
             $current = new DateTime();
-            $current->setDate($date->format('Y'), $date->format('m'), $today->format('d'));
+            $current->setDate(
+                $date->format('Y'),
+                $date->format('m'),
+                $today->format('d')
+            );
 
             return $current;
         },
@@ -129,20 +158,35 @@ Kirby::plugin('hananils/date-methods', [
         }
     ],
     'pageMethods' => [
-        'toDateRange' => function ($fieldStart = ['start', 'starttime'], $fieldEnd = ['end', 'endtime']) {
+        'toDateRange' => function (
+            $fieldStart = ['start', 'starttime'],
+            $fieldEnd = ['end', 'endtime']
+        ) {
             if (is_array($fieldStart)) {
-                $start = $this->content()->get($fieldStart[0])->toDate('Y-m-d');
-                $starttime = $this->content()->get($fieldStart[1])->toDate('H:i');
+                $start = $this->content()
+                    ->get($fieldStart[0])
+                    ->toDate('Y-m-d');
+                $starttime = $this->content()
+                    ->get($fieldStart[1])
+                    ->toDate('H:i');
             } else {
-                $start = $this->content()->get($fieldStart)->toDate('Y-m-d');
+                $start = $this->content()
+                    ->get($fieldStart)
+                    ->toDate('Y-m-d');
                 $starttime = null;
             }
 
             if (is_array($fieldEnd)) {
-                $end = $this->content()->get($fieldEnd[0])->toDate('Y-m-d');
-                $endtime = $this->content()->get($fieldEnd[1])->toDate('H:i');
+                $end = $this->content()
+                    ->get($fieldEnd[0])
+                    ->toDate('Y-m-d');
+                $endtime = $this->content()
+                    ->get($fieldEnd[1])
+                    ->toDate('H:i');
             } else {
-                $end = $this->content()->get($fieldEnd)->toDate('Y-m-d');
+                $end = $this->content()
+                    ->get($fieldEnd)
+                    ->toDate('Y-m-d');
                 $endtime = null;
             }
 
@@ -193,12 +237,26 @@ function dateRelative($to, $from = 'now')
     ]);
 }
 
-function dateFormatted($locale, $datetime, $datetype = IntlDateFormatter::LONG, $timetype = IntlDateFormatter::NONE, $timezone = null, $calendar = null, $pattern = "")
-{
-    $formatter = new IntlDateFormatter($locale, $datetype, $timetype, $timezone, $calendar, $pattern);
+function dateFormatted(
+    $locale,
+    $datetime,
+    $datetype = IntlDateFormatter::LONG,
+    $timetype = IntlDateFormatter::NONE,
+    $timezone = null,
+    $calendar = null,
+    $pattern = ''
+) {
+    $formatter = new IntlDateFormatter(
+        $locale,
+        $datetype,
+        $timetype,
+        $timezone,
+        $calendar,
+        $pattern
+    );
 
     return $formatter->format(datetime($datetime));
-};
+}
 
 function dateRange($from = [null, null], $to = [null, null])
 {
@@ -249,7 +307,11 @@ function dateRange($from = [null, null], $to = [null, null])
     );
 
     if ($options['code'] === 'de') {
-        $result = preg_replace('/(\d.) – (\d)/', '$1&thinsp;–&thinsp;$2', $result);
+        $result = preg_replace(
+            '/(\d.) – (\d)/',
+            '$1&thinsp;–&thinsp;$2',
+            $result
+        );
     }
 
     return $result;
