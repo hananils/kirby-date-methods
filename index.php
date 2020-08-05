@@ -344,6 +344,10 @@ function normalizeDate($string)
 
     $timestamp = $formatter->parse($string);
 
+    if ($timestamp === false) {
+        return false;
+    }
+
     return date('Y-m-d', $timestamp);
 }
 
@@ -361,6 +365,10 @@ function normalizeTime($string)
     }
 
     $timestamp = strtotime($string);
+
+    if ($timestamp === false) {
+        return false;
+    }
 
     return date('H:i', $timestamp);
 }
