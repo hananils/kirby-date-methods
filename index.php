@@ -82,13 +82,19 @@ Kirby::plugin('hananils/date-methods', [
             if (kirby()->language()) {
                 $locale = kirby()
                     ->language()
-                    ->locale(LC_ALL);
+                    ->locale();
             } else {
                 $locale = option('locale');
+            }
 
-                if (is_array($locale)) {
-                    $locale = $locale[LC_ALL];
-                }
+            if (is_array($locale)) {
+                $locale = array_shift(
+                    array_values(
+                        kirby()
+                            ->language()
+                            ->locale()
+                    )
+                );
             }
 
             return dateFormatted(
@@ -287,11 +293,11 @@ function dateRange($from = [null, null], $to = [null, null])
     }
 
     if (!empty($from[1])) {
-        list($hours, $minutes) = explode(':', $from[1]);
+        [$hours, $minutes] = explode(':', $from[1]);
         $start->setTime($hours, $minutes);
 
         if (!empty($to[1])) {
-            list($hours, $minutes) = explode(':', $to[1]);
+            [$hours, $minutes] = explode(':', $to[1]);
         }
 
         $end->setTime($hours, $minutes);
