@@ -88,13 +88,8 @@ Kirby::plugin('hananils/date-methods', [
             }
 
             if (is_array($locale)) {
-                $locale = array_shift(
-                    array_values(
-                        kirby()
-                            ->language()
-                            ->locale()
-                    )
-                );
+                $values = array_values($locale);
+                $locale = array_shift($values);
             }
 
             return dateFormatted(
