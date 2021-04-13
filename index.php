@@ -195,6 +195,38 @@ Kirby::plugin('hananils/date-methods', [
             }
 
             return dateRange([$start, $starttime], [$end, $endtime]);
+        },
+        'toDatePeriod' => function (
+            $fieldStart = 'start',
+            $fieldEnd = 'end',
+            $interval = 'P1D'
+        ) {
+            $start = $this->content()
+                ->get($fieldStart)
+                ->toDateTime();
+            $end = $this->content()
+                ->get($fieldEnd)
+                ->toDateTime();
+            $interval = new DateInterval($interval);
+
+            return new DatePeriod($start, $interval, $end);
+        },
+        'toDates' => function (
+            $fieldStart = 'start',
+            $fieldEnd = 'end',
+            $interval = 'P1D',
+            $format = 'Y-m-d'
+        ) {
+            $period = $this->toDatePeriod($fieldStart, $fieldEnd, $interval);
+            $dates = iterator_to_array($period);
+
+            if ($format) {
+                $dates = array_map(function ($date) use ($format) {
+                    return $date->format($format);
+                }, $dates);
+            }
+
+            return $dates;
         }
     ]
 ]);
