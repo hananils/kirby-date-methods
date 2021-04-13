@@ -194,6 +194,10 @@ Kirby::plugin('hananils/date-methods', [
                 $endtime = null;
             }
 
+            if (!$end) {
+                $end = $start;
+            }
+
             return dateRange([$start, $starttime], [$end, $endtime]);
         },
         'toDatePeriod' => function (
