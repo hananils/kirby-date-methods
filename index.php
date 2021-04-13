@@ -114,6 +114,9 @@ Kirby::plugin('hananils/date-methods', [
         'toRelative' => function ($field, $from = 'now') {
             return dateRelative($field->value(), $from);
         },
+        'toTime' => function ($field, $format = 'h:i') {
+            return $field->toDateTime()->format($format);
+        },
         'toCurrentYear' => function ($field) {
             $today = new DateTime();
             $date = $field->toDateTime();
