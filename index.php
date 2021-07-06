@@ -341,6 +341,29 @@ function dateRange($from = [null, null], $to = [null, null])
         $ranger->setTimeType(IntlDateFormatter::NONE);
     }
 
+    // Ranger doesn't correctly format same start and end dates with times.
+    // This needs to be handled manually.
+    if ($start == $end) {
+        $result = dateFormatted(
+            $options['code'],
+            $start,
+            $options['datetype'],
+            IntlDateFormatter::NONE
+        );
+
+        if (!empty($from[1])) {
+            $result .= $options['datetimeseparator'];
+            $result .= dateFormatted(
+                $options['code'],
+                $start,
+                IntlDateFormatter::NONE,
+                $options['timetype']
+            );
+        }
+
+        return $result;
+    }
+
     $result = $ranger->format(
         $start->format('Y-m-d H:i'),
         $end->format('Y-m-d H:i')
