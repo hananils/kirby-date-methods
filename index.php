@@ -159,6 +159,20 @@ Kirby::plugin('hananils/date-methods', [
             $diff = $birthday->diff($on);
 
             return $diff->format($format);
+        },
+        'isEarlierThan' => function ($field, $date, $equal = false) {
+            if ($equal) {
+                return $field->toDateTime() <= new DateTime($date);
+            } else {
+                return $field->toDateTime() < new DateTime($date);
+            }
+        },
+        'isLaterThan' => function ($field, $date, $equal = false) {
+            if ($equal) {
+                return $field->toDateTime() >= new DateTime($date);
+            } else {
+                return $field->toDateTime() > new DateTime($date);
+            }
         }
     ],
     'pageMethods' => [
