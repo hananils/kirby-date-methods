@@ -71,6 +71,13 @@ Kirby::plugin('hananils/date-methods', [
 
             return $from->diff($to);
         },
+        'toDateRounded' => function (
+            $field,
+            $interval = 'PT5M',
+            $reference = 'midnight'
+        ) {
+            return dateRounded($field->value(), $interval, $refernce);
+        },
         'toFormatted' => function (
             $field,
             $datetype = IntlDateFormatter::LONG,
@@ -310,6 +317,45 @@ function dateFormatted(
     );
 
     return $formatter->format(datetime($datetime));
+}
+
+function dateRounded($date, $interval = 'PT5M', $reference = null)
+{
+    $date = new DateTimeImmutable($date);
+    $interval = new DateInterval($interval);
+
+    if (!$reference) {
+        if ($interval->y > 0) {
+            $century = floor($date->format('Y') / 100) * 100;
+            $reference = '00:00:00 first day of January ' . $century;
+        } elseif ($interval->m > 0) {
+            $reference = '00:00:00 first day of January this year';
+        } elseif ($interval->d > 0) {
+            $reference = '00:00:00 first day of this month';
+        } else {
+            $reference = '00:00:00';
+        }
+    }
+
+    $start = $date->modify($reference);
+    $end = $date->add($interval);
+
+    $period = new DatePeriod($start, $interval, $end);
+    $timestamp = $date->getTimestamp();
+    $normalized = null;
+    foreach ($period as $occurence) {
+        $current = $occurence->getTimestamp();
+        if (
+            !$normalized ||
+            abs($timestamp - $current) < abs($timestamp - $normalized)
+        ) {
+            $normalized = $current;
+        }
+    }
+
+    $result = new DateTime();
+
+    return $result->setTimestamp($normalized);
 }
 
 function dateRange($from = [null, null], $to = [null, null])
