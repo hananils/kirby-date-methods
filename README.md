@@ -41,8 +41,8 @@ Modifiers adjust dates to the current day, month or year which is helpful when y
 
 ### 4. Validators
 
-- `isEarlierThan()`
-- `isLaterThan()`
+- [`isEarlierThan()`](#isearlierthandate-equal)
+- [`isLaterThan()`](#islaterthandate-equal)
 
 ## Installation
 
