@@ -10,34 +10,34 @@ There are four types of methods:
 
 Converters read a date string and convert it to PHP date and time objects like `DateTime`, `DateTimeImmutable` or `DateInterval` or arrays.
 
-- `toDateTime()` or `datetime()`
-- `toDateTimeImmutable()`
-- `toDateInterval()`
-- `toDateDiff()`
-- `toDatePeriod()`
-- `toDates()`
+- [`toDateTime()`](#todatetime) or [`datetime()`](#datetime)
+- [`toDateTimeImmutable()`](#todatetimeimmutable)
+- [`toDateInterval()`](#todateinterval)
+- [`toDateDiff()`](#todatediff)
+- [`toDatePeriod()`](#todateperiod)
+- [`toDates()`](#todates)
 
 ### 2. Formatters
 
 Formatters read a date string and return a formatted and localized string, either absolute or relative.
 
-- `toFormatted()` or `dateFormatted()`
-- `toFormattedPattern()`
-- `toRelative()` or `dateRelative()`
-- `toTime()`
-- `toAge()`
-- `toDateRange()` or `dateRange()`
+- [`toFormatted()`](#toformatted) or [`dateFormatted()`](#dateformatted)
+- [`toFormattedPattern()`](#toformattedpattern)
+- [`toRelative()`](#torelative) or [`dateRelative()`](#daterelative)
+- [`toTime()`](#totime)
+- [`toAge()`](#toage)
+- [`toDateRange()`](#todaterange) or [`dateRange()`](#daterange)
 
 ### 3. Modifiers
 
 Modifiers adjust dates to the current day, month or year which is helpful when you need to display the birthday of a person this year.
 
-- `toDateRounded()` or `dateRounded()`
-- `toCurrentYear()`
-- `toCurrentMonth()`
-- `toCurrentDay()`
-- `normalizeDate()`
-- `normalizeTime()`
+- [`toDateRounded()`](#todaterounded) or [`dateRounded()`](#daterounded)
+- [`toCurrentYear()`](#tocurrentyear)
+- [`toCurrentMonth()`](#tocurrentmonth)
+- [`toCurrentDay()`](#tocurrentday)
+- [`normalizeDate()`](#normalizedate)
+- [`normalizeTime()`](#normalizetime)
 
 ### 4. Validators
 
