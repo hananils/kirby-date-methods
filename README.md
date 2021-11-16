@@ -10,34 +10,34 @@ There are four types of methods:
 
 Converters read a date string and convert it to PHP date and time objects like `DateTime`, `DateTimeImmutable` or `DateInterval` or arrays.
 
-- [`toDateTime()`](#todatetime) or [`datetime()`](#datetime)
+- [`toDateTime()`](#todatetime) or [`datetime()`](#datetimedatetime)
 - [`toDateTimeImmutable()`](#todatetimeimmutable)
 - [`toDateInterval()`](#todateinterval)
-- [`toDateDiff()`](#todatediff)
-- [`toDatePeriod()`](#todateperiod)
-- [`toDates()`](#todates)
+- [`toDateDiff()`](#todatediffto)
+- [`toDatePeriod()`](#todateperiodfieldstart-fieldend-interval)
+- [`toDates()`](#todatesfieldstart-fieldend-interval-format)
 
 ### 2. Formatters
 
 Formatters read a date string and return a formatted and localized string, either absolute or relative.
 
-- [`toFormatted()`](#toformatted) or [`dateFormatted()`](#dateformatted)
-- [`toFormattedPattern()`](#toformattedpattern)
-- [`toRelative()`](#torelative) or [`dateRelative()`](#daterelative)
-- [`toTime()`](#totime)
-- [`toAge()`](#toage)
-- [`toDateRange()`](#todaterange) or [`dateRange()`](#daterange)
+- [`toFormatted()`](#toformatteddatetype-timetype-timezone-calendar-pattern) or [`dateFormatted()`](#dateformattedlocale-datetime-datetype-timetype-timezone-calendar-pattern)
+- [`toFormattedPattern()`](#toformattedpatternpattern)
+- [`toRelative()`](#torelativefrom) or [`dateRelative()`](#daterelativeto-from)
+- [`toTime()`](#totimeformat)
+- [`toAge()`](#toageon-format)
+- [`toDateRange()`](#todaterangefieldstart-fieldend) or [`dateRange()`](#daterangeto-from)
 
 ### 3. Modifiers
 
 Modifiers adjust dates to the current day, month or year which is helpful when you need to display the birthday of a person this year.
 
-- [`toDateRounded()`](#todaterounded) or [`dateRounded()`](#daterounded)
+- [`toDateRounded()`](#todateroundedinterval-reference) or [`dateRounded()`](#dateroundeddatetime-interval-reference)
 - [`toCurrentYear()`](#tocurrentyear)
 - [`toCurrentMonth()`](#tocurrentmonth)
 - [`toCurrentDay()`](#tocurrentday)
-- [`normalizeDate()`](#normalizedate)
-- [`normalizeTime()`](#normalizetime)
+- [`normalizeDate()`](#normalizedatestring)
+- [`normalizeTime()`](#normalizetimestring)
 
 ### 4. Validators
 
