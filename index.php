@@ -76,7 +76,7 @@ Kirby::plugin('hananils/date-methods', [
             $interval = 'PT5M',
             $reference = 'midnight'
         ) {
-            return dateRounded($field->value(), $interval, $refernce);
+            return dateRounded($field->value(), $interval, $reference);
         },
         'toFormatted' => function (
             $field,
@@ -167,14 +167,14 @@ Kirby::plugin('hananils/date-methods', [
 
             return $diff->format($format);
         },
-        'isEarlierThan' => function ($field, $date, $equal = false) {
+        'isEarlierThan' => function ($field, $date = 'now', $equal = false) {
             if ($equal) {
                 return $field->toDateTime() <= new DateTime($date);
             } else {
                 return $field->toDateTime() < new DateTime($date);
             }
         },
-        'isLaterThan' => function ($field, $date, $equal = false) {
+        'isLaterThan' => function ($field, $date = 'now', $equal = false) {
             if ($equal) {
                 return $field->toDateTime() >= new DateTime($date);
             } else {
@@ -256,6 +256,19 @@ Kirby::plugin('hananils/date-methods', [
     ]
 ]);
 
+/**
+ * Helpers
+ */
+
+function datetime($datetime = 'now')
+{
+    if (is_a($datetime, 'DateTime') || is_a($datetime, 'DateTimeImmutable')) {
+        return $datetime;
+    }
+
+    return new DateTime($datetime);
+}
+
 function dateRelative($to, $from = 'now')
 {
     $from = datetime($from);
@@ -319,7 +332,7 @@ function dateFormatted(
     return $formatter->format(datetime($datetime));
 }
 
-function dateRounded($date, $interval = 'PT5M', $reference = null)
+function dateRounded($datetime, $interval = 'PT5M', $reference = null)
 {
     $date = new DateTimeImmutable($date);
     $interval = new DateInterval($interval);
@@ -440,15 +453,6 @@ function dateRange($from = [null, null], $to = [null, null])
     return $result;
 }
 
-function datetime($datetime = 'now')
-{
-    if (is_a($datetime, 'DateTime') || is_a($datetime, 'DateTimeImmutable')) {
-        return $datetime;
-    }
-
-    return new DateTime($datetime);
-}
-
 function normalizeDate($string)
 {
     if (empty($string)) {
@@ -460,7 +464,11 @@ function normalizeDate($string)
     }
 
     $formatter = new IntlDateFormatter(
-        'de-DE',
+        kirby()->language()
+            ? kirby()
+                ->language()
+                ->locale()
+            : option('locale'),
         IntlDateFormatter::SHORT,
         IntlDateFormatter::NONE
     );
