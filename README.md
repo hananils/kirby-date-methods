@@ -17,6 +17,24 @@ Converters read a date string and convert it to PHP date and time objects like `
 - [`toDatePeriod()`](#todateperiodfieldstart-fieldend-interval)
 - [`toDates()`](#todatesfieldstart-fieldend-interval-format)
 
+```php
+// Get DateTime object
+$datetime = $page->date()->toDateTime();
+
+// Modify and format date
+$page
+  ->date()
+  ->toDateTime()
+  ->modify('+1 month')
+  ->format('Y-m-d');
+
+// Compare a date field to another date
+$page
+  ->date()
+  ->toDateDiff('2000-01-01')
+  ->format('The beginning of the century was %y ago.');
+```
+
 ### 2. Formatters
 
 Formatters read a date string and return a formatted and localized string, either absolute or relative.
@@ -27,6 +45,27 @@ Formatters read a date string and return a formatted and localized string, eithe
 - [`toTime()`](#totimeformat)
 - [`toAge()`](#toageon-format)
 - [`toDateRange()`](#todaterangefieldstart-fieldend) or [`dateRange()`](#daterangeto-from)
+
+```php
+// Get the date formatted in the current locale style, e. g.
+// '2021-01-01' becomes '1. Januar 2021' in German
+echo $page->date()->toFormatted();
+
+// Get the date formatted with a specific pattern in the current
+// locale style, e. g. '2021-01-01' becomes 'Januar 2021'
+echo $page->date()->toFormattedPattern('MMMM y');
+
+// Get the relative date like '5 days ago'
+echo $page->date()->toRelative();
+
+// Get the age of a person
+echo 'Nils is now ' . $page->birthday()->toAge() . ' years old';
+
+// Given a start and an end date field, return the localized
+// formatted date range, e. g. for the field values '2021-07-17'
+// and '2021-07-21' return '17. – 21. Juli 2021'
+echo $page->toDateRange();
+```
 
 ### 3. Modifiers
 
@@ -39,10 +78,34 @@ Modifiers adjust dates to the current day, month or year which is helpful when y
 - [`normalizeDate()`](#normalizedatestring)
 - [`normalizeTime()`](#normalizetimestring)
 
+```php
+// Round a date to the next full 5 minutes, e. g.
+// '2021-02-01 13:42' becomes '2021-02-01 13:45'
+$published = $page->published()->toDateRounded();
+
+// This can then be formatted automatically, e. g.
+// '1. Februar 2021 13:45'
+$published->toFormatted(IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
+
+// Get a user's birthday this year
+echo 'Bastian’s birthday is on ' .
+  $user
+    ->birthday()
+    ->toCurrentYear()
+    ->toFormatted();
+```
+
 ### 4. Validators
 
 - [`isEarlierThan()`](#isearlierthandate-equal)
 - [`isLaterThan()`](#islaterthandate-equal)
+
+```php
+// Check the given date
+if ($page->published()->isEarlierThan('2010-01-01')) {
+  echo 'This article is very old, please check if there are update available.'
+}
+```
 
 ## Installation
 
