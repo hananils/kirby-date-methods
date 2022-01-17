@@ -119,7 +119,15 @@ Kirby::plugin('hananils/date-methods', [
             );
         },
         'toRelative' => function ($field, $from = 'now') {
-            return dateRelative($field->value(), $from);
+            if (kirby()->language()) {
+                $locale = kirby()
+                    ->language()
+                    ->locale();
+            } else {
+                $locale = option('locale');
+            }
+
+            return dateRelative($field->value(), $from, $locale);
         },
         'toTime' => function ($field, $format = 'H:i') {
             return $field->toDateTime()->format($format);
@@ -269,7 +277,7 @@ function datetime($datetime = 'now')
     return new DateTime($datetime);
 }
 
-function dateRelative($to, $from = 'now')
+function dateRelative($to, $from = 'now', $locale = null)
 {
     $from = datetime($from);
     $to = datetime($to);
@@ -306,9 +314,14 @@ function dateRelative($to, $from = 'now')
         $direction = '';
     }
 
-    return tt('hananils.date-methods.' . $id . $direction, [
-        'count' => $count
-    ]);
+    return tt(
+        'hananils.date-methods.' . $id . $direction,
+        null,
+        [
+            'count' => $count
+        ],
+        $locale
+    );
 }
 
 function dateFormatted(
