@@ -41,7 +41,7 @@ Formatters read a date string and return a formatted and localized string, eithe
 
 - [`toFormatted()`](#toformatteddatetype-timetype-timezone-calendar-pattern) or [`dateFormatted()`](#dateformattedlocale-datetime-datetype-timetype-timezone-calendar-pattern)
 - [`toFormattedPattern()`](#toformattedpatternpattern)
-- [`toRelative()`](#torelativefrom) or [`dateRelative()`](#daterelativeto-from)
+- [`toRelative()`](#torelativefrom) or [`dateRelative()`](#daterelativeto-from-locale)
 - [`toTime()`](#totimeformat)
 - [`toAge()`](#toageon-format)
 - [`toDateRange()`](#todaterangefieldstart-fieldend) or [`dateRange()`](#daterangeto-from)
