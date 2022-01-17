@@ -306,12 +306,13 @@ Returns a `DateTime` object from the given date and time string. Directly return
 
 -**`$datetime`:** the date, defaults to `now`.
 
-## dateRelative($to, $from)
+## dateRelative($to, $from, $locale)
 
 Returns a human readable time difference to the given date, e. g. `just now`, `2 years ago`, `in 5 minutes`. The given date can be a `DateTime` object or any PHP-readable date string, see [supported formats](https://www.php.net/manual/en/datetime.formats.php).
 
 - **`$to`:** the date to compare to.
 - **`$from`:** the date to compare from, defaults to `now`.
+- **`$locale`:** the locale used for formatting.
 
 ```php
 dateRelative('2019-12-31', 'now');
