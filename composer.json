@@ -3,6 +3,7 @@
     "description": "Kirby 3 plugin providing field and page methods for formatting dates and creating PHP date objects.",
     "type": "kirby-plugin",
     "license": "MIT",
+    "version": "2.1.0",
     "authors": [
         {
             "name": "hana+nils · Büro für Gestaltung",
