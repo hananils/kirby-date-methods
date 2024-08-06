@@ -367,6 +367,19 @@ Converts the given date string to `H:i` format.
 
 - **`$string`:** the date string to be normalized.
 
+# Options
+
+There are several options to customize the plugin behaviour:
+
+| option              | description                                                                                                                                                                         | default                   |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
+| `code`              | The locale                                                                                                                                                                          | `de`                      |
+| `rangeseparator`    | The string used to separate a date range, e.g. `01.08.–05.08.24`                                                                                                                    | `–`                       |
+| `datetimeseparator` | The string used to separate date and time, e.g. `01.08., 10:00`                                                                                                                     | `, `                      |
+| `datetype`          | The date format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::LONG` |
+| `timetype`          | The time format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::SHORT` |
+
+
 # License
 
 This plugin is provided freely under the [MIT license](LICENSE.md) by [hana+nils · Büro für Gestaltung](https://hananils.de).
