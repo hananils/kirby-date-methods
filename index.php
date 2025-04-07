@@ -384,17 +384,29 @@ function dateRounded($datetime, $interval = 'PT5M', $reference = null)
     return $result->setTimestamp($normalized);
 }
 
-function dateRange($from = [null, null], $to = [null, null])
+/**
+ * Takes start and end dates and converts their values to a formatted
+ * date range string.
+ *
+ * @param $from Either a single start date or an array of the start date and time.
+ * @param $to Either a single end date or an array of the end date and time.
+ */
+function dateRange($from = [null, null], $to = [null, null]): string
 {
+    if (kirby()->language()) {
+        $locale = kirby()->language()->code();
+    } else {
+        $locale = option('locale', 'en');
+    }
+
     $options = option('hananils.date-methods', [
-        'code' => 'de',
         'rangeseparator' => '–',
         'datetimeseparator' => ', ',
         'datetype' => IntlDateFormatter::LONG,
         'timetype' => IntlDateFormatter::SHORT
     ]);
 
-    $ranger = new OpenPsa\Ranger\Ranger($options['code']);
+    $ranger = new OpenPsa\Ranger\Ranger($locale);
     $ranger->setRangeSeparator($options['rangeseparator']);
     $ranger->setDateTimeSeparator($options['datetimeseparator']);
     $ranger->setDateType($options['datetype']);
@@ -413,14 +425,14 @@ function dateRange($from = [null, null], $to = [null, null])
     }
 
     if (!empty($from[1])) {
-        [$hours, $minutes] = explode(':', $from[1]);
-        $start->setTime($hours, $minutes);
+        $startTime = $endTime = datetime($from[1]);
 
         if (!empty($to[1])) {
-            [$hours, $minutes] = explode(':', $to[1]);
+            $endTime = datetime($to[1]);
         }
 
-        $end->setTime($hours, $minutes);
+        $start->setTime($startTime->format('H'), $startTime->format('i'));
+        $end->setTime($endTime->format('H'), $endTime->format('i'));
 
         $ranger->setTimeType(IntlDateFormatter::SHORT);
     } else {
@@ -431,7 +443,7 @@ function dateRange($from = [null, null], $to = [null, null])
     // This needs to be handled manually.
     if ($start == $end) {
         $result = dateFormatted(
-            $options['code'],
+            $locale,
             $start,
             $options['datetype'],
             IntlDateFormatter::NONE
@@ -440,7 +452,7 @@ function dateRange($from = [null, null], $to = [null, null])
         if (!empty($from[1])) {
             $result .= $options['datetimeseparator'];
             $result .= dateFormatted(
-                $options['code'],
+                $locale,
                 $start,
                 IntlDateFormatter::NONE,
                 $options['timetype']
@@ -455,7 +467,7 @@ function dateRange($from = [null, null], $to = [null, null])
         $end->format('Y-m-d H:i')
     );
 
-    if ($options['code'] === 'de') {
+    if (str_starts_with($locale, 'de')) {
         $result = preg_replace(
             '/(\d.) – (\d)/',
             '$1&thinsp;–&thinsp;$2',
