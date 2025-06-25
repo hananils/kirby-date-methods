@@ -2,7 +2,35 @@
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
+use Kirby\Cms\App as Kirby;
+
 Kirby::plugin('hananils/date-methods', [
+    'options' => [
+        /**
+         * The string used to separate a date range, e.g. `01.08.–05.08.2024`.
+         *
+         * @return string
+         */
+        'rangeseparator' => '–',
+        /**
+         * The string used to separate date and time, e.g. `01.08.2024, 10:00`.
+         *
+         * @return string
+         */
+        'datetimeseparator' => ', ',
+        /**
+         * The date format used, must be one of the [predefined constants in `IntlDateFormatter`](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full).
+         *
+         * @return int IntlDateFormatter::LONG
+         */
+        'datetype' => IntlDateFormatter::LONG,
+        /**
+         * The time format used, must be one of the [predefined constants in `IntlDateFormatter`](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full).
+         *
+         * @return int IntlDateFormatter::SHORT
+         */
+        'timetype' => IntlDateFormatter::SHORT
+    ],
     'translations' => [
         'en' => [
             'hananils.date-methods.yearsPast' => '{count} years ago',
@@ -52,46 +80,92 @@ Kirby::plugin('hananils/date-methods', [
         ]
     ],
     'fieldMethods' => [
-        'toDateTime' => function ($field) {
+        /**
+         * Returns a `DateTime` representation of the field value, see
+         * [supported formats](https://www.php.net/manual/en/datetime.formats.php)
+         */
+        'toDateTime' => function ($field): DateTime {
             return datetime($field->value());
         },
-        'toDateTimeImmutable' => function ($field) {
+
+        /**
+         * Returns a `DateTimeImmutable` representation of the field value, see
+         * [supported formats](https://www.php.net/manual/en/datetime.formats.php).
+         */
+        'toDateTimeImmutable' => function ($field): DateTimeImmutable {
             $datetime = new DateTimeImmutable($field->value());
 
             return $datetime;
         },
-        'toDateInterval' => function ($field) {
+
+        /**
+         * Returns a `DateInterval` representation of the field value, see
+         * [supported formats](https://www.php.net/manual/en/dateinterval.construct.php).
+         */
+        'toDateInterval' => function ($field): DateInterval {
             $interval = new DateInterval($field->value());
 
             return $interval;
         },
-        'toDateDiff' => function ($field, $to = 'now') {
+
+        /**
+         * Returns a `DateInterval` object representing the difference between
+         * the field's date and the given date. The provided date can either be
+         * a `DateTime` object or a PHP-readable string, defaults to the
+         * difference to now.
+         *
+         * @param $to Date to compare the field value with. The provided date
+         * can either be a `DateTime` object or a PHP-readable string, defaults
+         * to `now`.
+         */
+        'toDateDiff' => function ($field, string $to = 'now'): DateInterval {
             $from = $field->toDateTime();
             $to = datetime($to);
 
             return $from->diff($to);
         },
+
+        /**
+         * Returns a `DateTime` representation of the field's value rounded the
+         * given interval.
+         *
+         * @param $interval The interval to round the date to, defaults to
+         * 5 minutes (`PT5M`).
+         * @param $reference Reference date to start the interval from. Defaults
+         * to the beginning of the century for year intervals, to the first day
+         * of the year for month intervals, to the first day of the current
+         * month for day intervals and to midnight for all smaller intervals.
+         */
         'toDateRounded' => function (
             $field,
-            $interval = 'PT5M',
-            $reference = 'midnight'
-        ) {
+            string $interval = 'PT5M',
+            string $reference = 'midnight'
+        ): DateTime {
             return dateRounded($field->value(), $interval, $reference);
         },
+
+        /**
+         * Returns a localized, formatted date using `IntlDateFormatter`, see
+         * [options](https://www.php.net/manual/de/intldateformatter.create.php).
+         *
+         * @param $datetype Format of the date determined by one of the [IntlDateFormatter constants](https://www.php.net/manual/de/class.intldateformatter.php#intl.intldateformatter-constants).
+         * @param $timetype Format of the time determined by one of the [IntlDateFormatter constants](https://www.php.net/manual/de/class.intldateformatter.php#intl.intldateformatter-constants).
+         * @param $timezone The timezone ID.
+         * @param $calendar Calendar to use for formatting or parsing.
+         * @param $pattern [Optional formatting pattern](https://unicode-org.github.io/icu/userguide/format_parse/datetime).
+         */
         'toFormatted' => function (
             $field,
-            $datetype = IntlDateFormatter::LONG,
-            $timetype = IntlDateFormatter::NONE,
-            $timezone = null,
-            $calendar = null,
-            $pattern = ''
-        ) {
+            int $datetype = IntlDateFormatter::LONG,
+            int $timetype = IntlDateFormatter::NONE,
+            IntlTimeZone|DateTimeZone|string|null $timezone = null,
+            IntlCalendar|int|null $calendar = null,
+            ?string $pattern = ''
+        ): string {
             if (kirby()->language()) {
-                $locale = kirby()
-                    ->language()
-                    ->locale();
+                $locale = kirby()->language()->locale();
             } else {
-                $locale = option('locale');
+                $locale = option('locale', 'en');
             }
 
             if (is_array($locale)) {
@@ -109,7 +183,18 @@ Kirby::plugin('hananils/date-methods', [
                 $pattern
             );
         },
-        'toFormattedPattern' => function ($field, $pattern = 'MMMM y') {
+
+        /**
+         * Returns a localized date formatted by the given pattern, see
+         * [symbol table](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table)
+         * for reference. Shortcut to `toFormatted`.
+         *
+         * @param $pattern [The formatting pattern](https://unicode-org.github.io/icu/userguide/format_parse/datetime).
+         */
+        'toFormattedPattern' => function (
+            $field,
+            string $pattern = 'MMMM y'
+        ): string {
             return $field->toFormatted(
                 IntlDateFormatter::LONG,
                 IntlDateFormatter::NONE,
@@ -118,20 +203,42 @@ Kirby::plugin('hananils/date-methods', [
                 $pattern
             );
         },
-        'toRelative' => function ($field, $from = 'now') {
+
+        /**
+         * Returns a human readable time difference to the given date, e. g.
+         * `just now`, `2 years ago`, `in 5 minutes`. The given date can be a
+         * `DateTime` object or any PHP-readable date string, see
+         * [supported formats](https://www.php.net/manual/en/datetime.formats.php).
+         *
+         * @param $from The reference date to compare the field value to,
+         * defaults to `now`.
+         */
+        'toRelative' => function (
+            $field,
+            DateTime|DateTimeImmutable|string $from = 'now'
+        ): string {
             if (kirby()->language()) {
-                $locale = kirby()
-                    ->language()
-                    ->locale();
+                $locale = kirby()->language()->locale();
             } else {
-                $locale = option('locale');
+                $locale = option('locale', 'en');
             }
 
             return dateRelative($field->value(), $from, $locale);
         },
-        'toTime' => function ($field, $format = 'H:i') {
+
+        /**
+         * Returns the formatted time of the given field value.
+         *
+         * @param $format The time format, defaults to `H:i`.
+         */
+        'toTime' => function ($field, string $format = 'H:i'): string {
             return $field->toDateTime()->format($format);
         },
+
+        /**
+         * Creates a `DateTime` representation of the field value and returns it
+         * with the year set to the current one.
+         */
         'toCurrentYear' => function ($field) {
             $today = new DateTime();
             $date = $field->toDateTime();
@@ -144,7 +251,12 @@ Kirby::plugin('hananils/date-methods', [
 
             return $current;
         },
-        'toCurrentMonth' => function ($field) {
+
+        /**
+         * Creates a `DateTime` representation of the field value and returns it
+         * with the month set to the current one.
+         */
+        'toCurrentMonth' => function ($field): DateTime {
             $today = new DateTime();
             $date = $field->toDateTime();
             $current = new DateTime();
@@ -156,7 +268,12 @@ Kirby::plugin('hananils/date-methods', [
 
             return $current;
         },
-        'toCurrentDay' => function ($field) {
+
+        /**
+         * Creates a `DateTime` representation of the field value and returns it
+         * with the day set to the current one.
+         */
+        'toCurrentDay' => function ($field): DateTime {
             $today = new DateTime();
             $date = $field->toDateTime();
             $current = new DateTime();
@@ -168,21 +285,57 @@ Kirby::plugin('hananils/date-methods', [
 
             return $current;
         },
-        'toAge' => function ($field, $on = 'today', $format = '%y') {
+
+        /**
+         * Calculates the difference difference between the field value and the
+         * given date. Returns the difference in the given format, see
+         * [format options](https://www.php.net/manual/de/dateinterval.format.php).
+         * Useful to calculate the age of a person.
+         *
+         * @param $on Reference date for the age calculation, defaults to `today`.
+         * @param $format Age format, defaults to `%y` (years).
+         */
+        'toAge' => function (
+            $field,
+            string $on = 'today',
+            string $format = '%y'
+        ): string {
             $birthday = new DateTime($field->value());
             $on = new DateTime($on);
             $diff = $birthday->diff($on);
 
             return $diff->format($format);
         },
-        'isEarlierThan' => function ($field, $date = 'now', $equal = false) {
+
+        /**
+         * Checks it the field value is earlier than or equal to the given date.
+         *
+         * @param $date The reference date, defaults to `now`.
+         * @param $equal Flag to also accept equal dates, defaults to `false`.
+         */
+        'isEarlierThan' => function (
+            $field,
+            DateTime|DateTimeImmutable|string $date = 'now',
+            bool $equal = false
+        ): bool {
             if ($equal) {
                 return $field->toDateTime() <= new DateTime($date);
             } else {
                 return $field->toDateTime() < new DateTime($date);
             }
         },
-        'isLaterThan' => function ($field, $date = 'now', $equal = false) {
+
+        /**
+         * Checks it the field value is later than or equal to the given date.
+         *
+         * @param $date The reference date, defaults to `now`.
+         * @param $equal Flag to also accept equal dates, defaults to `false`.
+         */
+        'isLaterThan' => function (
+            $field,
+            DateTime|DateTimeImmutable|string $date = 'now',
+            bool $equal = false
+        ): bool {
             if ($equal) {
                 return $field->toDateTime() >= new DateTime($date);
             } else {
@@ -191,10 +344,19 @@ Kirby::plugin('hananils/date-methods', [
         }
     ],
     'pageMethods' => [
+        /**
+         * Takes fields for start and end dates and converts their values to a
+         * formatted date range string.
+         *
+         * @param $fieldStart Either a single field name containing the start
+         * date or an array of fields containing the start date and time.
+         * @param $fieldEnd Either a single field name containing the end
+         * date or an array of fields containing the end date and time.
+         */
         'toDateRange' => function (
-            $fieldStart = ['start', 'starttime'],
-            $fieldEnd = ['end', 'endtime']
-        ) {
+            array $fieldStart = ['start', 'starttime'],
+            array $fieldEnd = ['end', 'endtime']
+        ): string {
             if (is_array($fieldStart)) {
                 $start = $this->content()
                     ->get($fieldStart[0])
@@ -203,9 +365,7 @@ Kirby::plugin('hananils/date-methods', [
                     ->get($fieldStart[1])
                     ->toDate('H:i');
             } else {
-                $start = $this->content()
-                    ->get($fieldStart)
-                    ->toDate('Y-m-d');
+                $start = $this->content()->get($fieldStart)->toDate('Y-m-d');
                 $starttime = null;
             }
 
@@ -217,9 +377,7 @@ Kirby::plugin('hananils/date-methods', [
                     ->get($fieldEnd[1])
                     ->toDate('H:i');
             } else {
-                $end = $this->content()
-                    ->get($fieldEnd)
-                    ->toDate('Y-m-d');
+                $end = $this->content()->get($fieldEnd)->toDate('Y-m-d');
                 $endtime = null;
             }
 
@@ -229,27 +387,41 @@ Kirby::plugin('hananils/date-methods', [
 
             return dateRange([$start, $starttime], [$end, $endtime]);
         },
+        /**
+         * Takes fields for start and end dates and converts their values to a
+         * `DatePeriod` instance.
+         *
+         * @param $fieldStart The name of the field containing the start date.
+         * @param $fieldEnd The name of the field containing the end date.
+         * @parem $interval The interval between recurrences within the period.
+         */
         'toDatePeriod' => function (
-            $fieldStart = 'start',
-            $fieldEnd = 'end',
-            $interval = 'P1D'
-        ) {
-            $start = $this->content()
-                ->get($fieldStart)
-                ->toDateTime();
-            $end = $this->content()
-                ->get($fieldEnd)
-                ->toDateTime();
+            string $fieldStart = 'start',
+            string $fieldEnd = 'end',
+            string $interval = 'P1D'
+        ): DatePeriod {
+            $start = $this->content()->get($fieldStart)->toDateTime();
+            $end = $this->content()->get($fieldEnd)->toDateTime();
             $interval = new DateInterval($interval);
 
             return new DatePeriod($start, $interval, $end);
         },
+
+        /**
+         * Takes fields for start and end dates and coverts them to an array of
+         * dates based on the given date interval and format.
+         *
+         * @param $fieldStart The name of the field containing the start date.
+         * @param $fieldEnd The name of the field containing the end date.
+         * @param $interval The interval between recurrences within the period.
+         * @param $format The date format.
+         */
         'toDates' => function (
-            $fieldStart = 'start',
-            $fieldEnd = 'end',
-            $interval = 'P1D',
-            $format = 'Y-m-d'
-        ) {
+            string $fieldStart = 'start',
+            string $fieldEnd = 'end',
+            string $interval = 'P1D',
+            string $format = 'Y-m-d'
+        ): array {
             $period = $this->toDatePeriod($fieldStart, $fieldEnd, $interval);
             $dates = iterator_to_array($period);
 
@@ -265,20 +437,39 @@ Kirby::plugin('hananils/date-methods', [
 ]);
 
 /**
- * Helpers
+ * Returns a `DateTime` object from the given date and time string. Directly
+ * returns the input if it's a `DateTime` object already.
+ *
+ * @param $datetime The date.
  */
-
-function datetime($datetime = 'now')
-{
+function datetime(
+    DateTime|DateTimeImmutable|string|null $datetime = 'now'
+): DateTime|DateTimeImmutable {
     if (is_a($datetime, 'DateTime') || is_a($datetime, 'DateTimeImmutable')) {
         return $datetime;
+    }
+
+    if ($datetime === null) {
+        $datetime = 'now';
     }
 
     return new DateTime($datetime);
 }
 
-function dateRelative($to, $from = 'now', $locale = null)
-{
+/**
+ * Returns a human readable time difference to the given date, e. g. `just now`,
+ * `2 years ago`, `in 5 minutes`. The given date can be a `DateTime` object or
+ * any PHP-readable date string, see [supported formats](https://www.php.net/manual/en/datetime.formats.php).
+ *
+ * @param $to The date.
+ * @param $from The reference date.
+ * @param $locale The locale.
+ */
+function dateRelative(
+    DateTime|DateTimeImmutable|string $to,
+    DateTime|DateTimeImmutable|string $from = 'now',
+    string|null $locale = null
+): string {
     $from = datetime($from);
     $to = datetime($to);
     $diff = $from->diff($to);
@@ -324,15 +515,27 @@ function dateRelative($to, $from = 'now', $locale = null)
     );
 }
 
+/**
+ * Returns a localized, formatted date using `IntlDateFormatter`, see
+ * [options](https://www.php.net/manual/de/intldateformatter.create.php).
+ *
+ * @param $locale Locale to use when formatting.
+ * @param $datetime
+ * @param $datetype Format of the date determined by one of the [IntlDateFormatter constants](https://www.php.net/manual/de/class.intldateformatter.php#intl.intldateformatter-constants).
+ * @param $timetype Format of the time determined by one of the [IntlDateFormatter constants](https://www.php.net/manual/de/class.intldateformatter.php#intl.intldateformatter-constants).
+ * @param $timezone The timezone ID.
+ * @param $calendar Calendar to use for formatting or parsing.
+ * @param $pattern [Optional formatting pattern](https://unicode-org.github.io/icu/userguide/format_parse/datetime).
+ */
 function dateFormatted(
-    $locale,
-    $datetime,
-    $datetype = IntlDateFormatter::LONG,
-    $timetype = IntlDateFormatter::NONE,
-    $timezone = null,
-    $calendar = null,
-    $pattern = ''
-) {
+    string $locale,
+    DateTime|DateTimeImmutable|string $datetime,
+    int $datetype = IntlDateFormatter::LONG,
+    int $timetype = IntlDateFormatter::NONE,
+    IntlTimeZone|DateTimeZone|string|null $timezone = null,
+    IntlCalendar|int|null $calendar = null,
+    ?string $pattern = null
+): string {
     $formatter = new IntlDateFormatter(
         $locale,
         $datetype,
@@ -345,9 +548,20 @@ function dateFormatted(
     return $formatter->format(datetime($datetime));
 }
 
-function dateRounded($datetime, $interval = 'PT5M', $reference = null)
+/**
+ * Returns a `DateTime` representation of the given date rounded the given
+ * interval.
+ *
+ * @param $datetime The date.
+ * @param $interval The interval to round the date to.
+ * @param $reference Reference date to start the interval from. Defaults
+ * to the beginning of the century for year intervals, to the first day
+ * of the year for month intervals, to the first day of the current
+ * month for day intervals and to midnight for all smaller intervals.
+ */
+function dateRounded($datetime, $interval = 'PT5M', $reference = null): DateTime
 {
-    $date = new DateTimeImmutable($date);
+    $date = new DateTimeImmutable($datetime);
     $interval = new DateInterval($interval);
 
     if (!$reference) {
@@ -478,27 +692,30 @@ function dateRange($from = [null, null], $to = [null, null]): string
     return $result;
 }
 
-function normalizeDate($string)
+/**
+ * Converts the given date string to `Y-m-d` format.
+ *
+ * @param $date The date to be normalized.
+ */
+function normalizeDate(string $date): string
 {
-    if (empty($string)) {
-        return $string;
+    if (empty($date)) {
+        return $date;
     }
 
-    if (preg_match('/\d\d\d\d-\d\d-\d\d/', $string)) {
-        return $string;
+    if (preg_match('/\d\d\d\d-\d\d-\d\d/', $date)) {
+        return $date;
     }
 
     $formatter = new IntlDateFormatter(
         kirby()->language()
-            ? kirby()
-                ->language()
-                ->locale()
-            : option('locale'),
+            ? kirby()->language()->locale()
+            : option('locale', 'en'),
         IntlDateFormatter::SHORT,
         IntlDateFormatter::NONE
     );
 
-    $timestamp = $formatter->parse($string);
+    $timestamp = $formatter->parse($date);
 
     if ($timestamp === false) {
         return false;
@@ -507,20 +724,25 @@ function normalizeDate($string)
     return date('Y-m-d', $timestamp);
 }
 
-function normalizeTime($string)
+/**
+ * Converts the given date string to `H:i` format.
+ *
+ * @param $time The time to be normalized.
+ */
+function normalizeTime(string $time): string
 {
-    if (empty($string)) {
-        return $string;
+    if (empty($time)) {
+        return $time;
     }
 
-    $string = str_replace('.', ':', $string);
-    $string = preg_replace('/[^0-9:]/', '', $string);
+    $time = str_replace('.', ':', $time);
+    $time = preg_replace('/[^0-9:]/', '', $time);
 
-    if (preg_match('/\d\d:\d\d/', $string)) {
-        return $string;
+    if (preg_match('/\d\d:\d\d/', (string) $time)) {
+        return $time;
     }
 
-    $timestamp = strtotime($string);
+    $timestamp = strtotime((string) $time);
 
     if ($timestamp === false) {
         return false;

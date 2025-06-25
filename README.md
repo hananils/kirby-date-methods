@@ -1,6 +1,6 @@
 ![Kirby Date Methods](.github/title.png)
 
-Date Methods is a plugin for [Kirby 3](https://getkirby.com) that allows for advanced date and time parsing and formatting using PHP's core date objects. It offers methods for fields to handle single dates, methods for pages to handle multiple dates (ranges) and also provides helper functions to simplify working with dates and times in general.
+Date Methods is a plugin for [Kirby](https://getkirby.com) that allows for advanced date and time parsing and formatting using PHP's core date objects. It offers methods for fields to handle single dates, methods for pages to handle multiple dates (ranges) and also provides helper functions to simplify working with dates and times in general.
 
 ## Overview
 
@@ -22,17 +22,13 @@ Converters read a date string and convert it to PHP date and time objects like `
 $datetime = $page->date()->toDateTime();
 
 // Modify and format date
-$page
-  ->date()
-  ->toDateTime()
-  ->modify('+1 month')
-  ->format('Y-m-d');
+$page->date()->toDateTime()->modify('+1 month')->format('Y-m-d');
 
 // Compare a date field to another date
 $page
-  ->date()
-  ->toDateDiff('2000-01-01')
-  ->format('The beginning of the century was %y ago.');
+    ->date()
+    ->toDateDiff('2000-01-01')
+    ->format('The beginning of the century was %y ago.');
 ```
 
 ### 2. Formatters
@@ -89,10 +85,7 @@ $published->toFormatted(IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
 
 // Get a user's birthday this year
 echo 'Bastian’s birthday is on ' .
-  $user
-    ->birthday()
-    ->toCurrentYear()
-    ->toFormatted();
+    $user->birthday()->toCurrentYear()->toFormatted();
 ```
 
 ### 4. Validators
@@ -371,16 +364,14 @@ Converts the given date string to `H:i` format.
 
 There are several options to customize the plugin behaviour:
 
-| option              | description                                                                                                                                                                         | default                   |
-|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
-| `code`              | The locale                                                                                                                                                                          | `de`                      |
-| `rangeseparator`    | The string used to separate a date range, e.g. `01.08.–05.08.24`                                                                                                                    | `–`                       |
-| `datetimeseparator` | The string used to separate date and time, e.g. `01.08., 10:00`                                                                                                                     | `, `                      |
-| `datetype`          | The date format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::LONG` |
-| `timetype`          | The time format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::SHORT` |
-
+| option | description | default |
+| --- | --- | --- |
+| `code` | The locale | `de` |
+| `rangeseparator` | The string used to separate a date range, e.g. `01.08.–05.08.24` | `–` |
+| `datetimeseparator` | The string used to separate date and time, e.g. `01.08., 10:00` | `, ` |
+| `datetype` | The date format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::LONG` |
+| `timetype` | The time format used. <br/>Must be one of [the predefined constants in IntlDateFormatter](https://www.php.net/manual/en/class.intldateformatter.php#intldateformatter.constants.full) | `IntlDateFormatter::SHORT` |
 
 # License
 
-This plugin is provided freely under the [MIT license](LICENSE.md) by [hana+nils · Büro für Gestaltung](https://hananils.de).
-We create visual designs for digital and analog media.
+This plugin is provided freely under the [MIT license](LICENSE.md) by [hana+nils · Büro für Gestaltung](https://hananils.de). We create visual designs for digital and analog media.

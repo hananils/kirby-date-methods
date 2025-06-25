@@ -1,20 +1,34 @@
 {
     "name": "hananils/kirby-date-methods",
-    "description": "Kirby 3 plugin providing field and page methods for formatting dates and creating PHP date objects.",
-    "type": "kirby-plugin",
+    "description": "Parsing and formatting dates can be difficult, especially if you deal with multilingual content. Date Methods aims to simplify date output by providing page and field methods to handle points in time as well as date ranges accurately in your snippets and templates.",
     "license": "MIT",
-    "version": "2.1.0",
+    "type": "kirby-plugin",
+    "version": "3.0.0",
     "authors": [
         {
             "name": "hana+nils · Büro für Gestaltung",
             "email": "buero@hananils.de"
         }
     ],
+    "homepage": "https://kirby.hananils.de/plugins/date-methods",
     "require": {
-        "getkirby/composer-installer": "^1.1",
+        "php": "^8.2",
         "openpsa/ranger": "^0.5.1"
     },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.47",
+        "rector/rector": "^2.0"
+    },
+    "replace": {
+        "symfony/intl": "*"
+    },
+    "suggest": {
+        "symfony/intl": "~2.6|~3.4|~4.0|~5.0|~6.0|~7.0"
+    },
     "config": {
-        "optimize-autoloader": true
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        },
+        "sort-packages": true
     }
 }

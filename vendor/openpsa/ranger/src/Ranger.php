@@ -9,7 +9,7 @@ namespace OpenPsa\Ranger;
 
 use IntlDateFormatter;
 use DateTime;
-use RuntimeException;
+use DateTimeImmutable;
 use InvalidArgumentException;
 use OpenPsa\Ranger\Provider\DefaultProvider;
 
@@ -52,6 +52,7 @@ class Ranger
         'e' => self::DAY,
         'c' => self::DAY,
         'a' => self::AM,
+        'B' => self::AM,
         'h' => self::HOUR,
         'H' => self::HOUR,
         'k' => self::HOUR,
@@ -73,6 +74,16 @@ class Ranger
      * @var string
      */
     private $escape_character = "'";
+
+    /**
+     * @var string
+     */
+    private $virtual_separator = '<<<>>>';
+
+    /**
+     * @var string
+     */
+    private $pattern;
 
     /**
      * @var array
@@ -110,10 +121,9 @@ class Ranger
     private $time_type = IntlDateFormatter::NONE;
 
     /**
-     *
      * @param string $locale
      */
-    public function __construct($locale)
+    public function __construct(string $locale)
     {
         $this->locale = $locale;
     }
@@ -122,7 +132,7 @@ class Ranger
      * @param int $type One of the IntlDateFormatter constants
      * @return self
      */
-    public function setDateType($type)
+    public function setDateType(int $type)
     {
         if ($type !== $this->date_type) {
             $this->date_type = $type;
@@ -136,7 +146,7 @@ class Ranger
      * @param int $type One of the IntlDateFormatter constants
      * @return self
      */
-    public function setTimeType($type)
+    public function setTimeType(int $type)
     {
         if ($type !== $this->time_type) {
             $this->time_type = $type;
@@ -150,7 +160,7 @@ class Ranger
      * @param string $separator
      * @return self
      */
-    public function setRangeSeparator($separator)
+    public function setRangeSeparator(string $separator)
     {
         $this->range_separator = $separator;
         return $this;
@@ -160,7 +170,7 @@ class Ranger
      * @param string $separator
      * @return self
      */
-    public function setDateTimeSeparator($separator)
+    public function setDateTimeSeparator(string $separator)
     {
         $this->date_time_separator = $separator;
         return $this;
@@ -172,7 +182,7 @@ class Ranger
      * @param mixed $end
      * @return string
      */
-    public function format($start, $end)
+    public function format($start, $end) : string
     {
         $start = $this->prepare_date($start);
         $end = $this->prepare_date($end);
@@ -187,7 +197,9 @@ class Ranger
         $left = '';
         foreach ($this->pattern_mask as $i => $part) {
             if ($part['delimiter']) {
-                $left .= $part['content'];
+                if ($part['content'] !== $this->virtual_separator) {
+                    $left .= $part['content'];
+                }
             } else {
                 if ($part['content'] > $best_match) {
                     break;
@@ -205,7 +217,9 @@ class Ranger
         for ($j = count($this->pattern_mask) - 1; $j + 1 > $i; $j--) {
             $part = $end_tokens[$j];
             if ($part['type'] == 'delimiter') {
-                $right = $part['content'] . $right;
+                if ($part['content'] !== $this->virtual_separator) {
+                    $right = $part['content'] . $right;
+                }
             } else {
                 if ($part['type'] > $best_match) {
                     break;
@@ -217,8 +231,12 @@ class Ranger
         $left_middle = '';
         $right_middle = '';
         for ($k = $i; $k <= $j; $k++) {
-            $left_middle .= $start_tokens[$k]['content'];
-            $right_middle .= $end_tokens[$k]['content'];
+            if ($start_tokens[$k]['content'] !== $this->virtual_separator) {
+                $left_middle .= $start_tokens[$k]['content'];
+            }
+            if ($end_tokens[$k]['content'] !== $this->virtual_separator) {
+                $right_middle .= $end_tokens[$k]['content'];
+            }
         }
 
         return $left . $left_middle . $this->get_range_separator($best_match) . $right_middle . $right;
@@ -227,20 +245,25 @@ class Ranger
     /**
      * @param mixed $input
      * @throws InvalidArgumentException
-     * @return \DateTime
+     * @return DateTime
      */
-    private function prepare_date($input)
+    private function prepare_date($input) : DateTime
     {
         if ($input instanceof DateTime) {
             return $input;
         }
+        if ($input instanceof DateTimeImmutable) {
+            $date = new DateTime('@' . $input->getTimestamp());
+            $date->setTimezone($input->getTimezone());
+            return $date;
+        }
+        if (is_numeric($input)) {
+            $date = new Datetime;
+            $date->setTimestamp(intval($input));
+            return $date;
+        }
         if (is_string($input)) {
             return new Datetime($input);
-        }
-        if (is_int($input)) {
-            $date = new Datetime;
-            $date->setTimestamp($input);
-            return $date;
         }
         if ($input === null) {
             return new Datetime;
@@ -252,7 +275,7 @@ class Ranger
      * @param int $best_match
      * @return string
      */
-    private function get_range_separator($best_match)
+    private function get_range_separator(int $best_match) : string
     {
         $intl = new IntlDateFormatter($this->locale, $this->date_type, $this->time_type);
 
@@ -270,34 +293,22 @@ class Ranger
      * @param DateTime $date
      * @return array
      */
-    private function tokenize(DateTime $date)
+    private function tokenize(DateTime $date) : array
     {
         $tokens = [];
 
-        $formatted = "";
         if ($this->date_type === IntlDateFormatter::NONE && $this->time_type === IntlDateFormatter::NONE) {
             // why would you want this?
             return $tokens;
         }
 
-        if ($this->date_type !== IntlDateFormatter::NONE) {
-            $intl = new IntlDateFormatter($this->locale, $this->date_type, IntlDateFormatter::NONE, $date->getTimezone());
-            $formatted .= $intl->format((int) $date->format('U'));
-            if ($this->time_type !== IntlDateFormatter::NONE) {
-                $formatted .= $this->date_time_separator;
-            }
-        }
-
-        if ($this->time_type !== IntlDateFormatter::NONE) {
-            $intl = new IntlDateFormatter($this->locale, IntlDateFormatter::NONE, $this->time_type, $date->getTimezone());
-            $formatted .= $intl->format((int) $date->format('U'));
-        }
+        $intl = new IntlDateFormatter($this->locale, IntlDateFormatter::NONE, IntlDateFormatter::NONE, $date->getTimezone(), null, $this->pattern);
+        $formatted = $intl->format((int) $date->format('U'));
 
         $type = null;
         foreach ($this->pattern_mask as $part) {
             if ($part['delimiter']) {
                 $parts = explode($part['content'], $formatted, 2);
-
                 if (count($parts) == 2) {
                     $tokens[] = ['type' => $type, 'content' => $parts[0]];
                     $formatted = $parts[1];
@@ -308,18 +319,17 @@ class Ranger
             }
         }
         if (!$part['delimiter']) {
-            $tokens[] =  ['type' => $type, 'content' => $formatted];
+            $tokens[] = ['type' => $type, 'content' => $formatted];
         }
         return $tokens;
     }
 
     /**
-     *
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    private function find_best_match(DateTime $start, DateTime $end)
+    private function find_best_match(DateTime $start, DateTime $end) : int
     {
         // make a copy of end because we might change pieces of it
         $end_copy = clone $end;
@@ -364,7 +374,7 @@ class Ranger
             return;
         }
 
-        $pattern = "";
+        $this->pattern = $pattern = '';
         if ($this->date_type !== IntlDateFormatter::NONE) {
             $intl = new IntlDateFormatter($this->locale, $this->date_type, IntlDateFormatter::NONE);
             $pattern .= $intl->getPattern();
@@ -389,13 +399,12 @@ class Ranger
                         //Literal '
                         $part['content'] = $char;
                     }
-
-                    $this->push_to_mask($part);
-                    $part = ['content' => '', 'delimiter' => false];
                 } else {
                     $esc_active = true;
-                    $this->push_to_mask($part);
-                    $part = ['content' => '', 'delimiter' => true];
+                    if (!$part['delimiter']) {
+                        $this->push_to_mask($part);
+                        $part = ['content' => '', 'delimiter' => true];
+                    }
                 }
             } elseif ($esc_active) {
                 $part['content'] .= $char;
@@ -413,11 +422,15 @@ class Ranger
                 } else {
                     if (   $part['content'] !== ''
                         && $part['content'] !== $this->pattern_characters[$char]) {
-                        throw new RuntimeException('missing separator between date parts');
+                        $this->push_to_mask($part);
+                        $this->push_to_mask(['content' => $this->virtual_separator, 'delimiter' => true]);
+                        $this->pattern .= $this->virtual_separator;
+                        $part = ['content' => '', 'delimiter' => false];
                     }
                     $part['content'] = $this->pattern_characters[$char];
                 }
             }
+            $this->pattern .= $char;
         }
         $this->push_to_mask($part);
     }
@@ -429,7 +442,9 @@ class Ranger
     {
         if ($part['content'] !== '') {
             $this->pattern_mask[] = $part;
-            $this->precision = max($this->precision, $part['content']);
+            if (!$part['delimiter']) {
+                $this->precision = max($this->precision, $part['content']);
+            }
         }
     }
 }

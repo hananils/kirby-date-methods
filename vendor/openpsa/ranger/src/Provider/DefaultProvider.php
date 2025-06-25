@@ -13,9 +13,8 @@ class DefaultProvider implements Provider
 {
     /**
      * {@inheritDoc}
-     * @see \OpenPsa\Ranger\Provider\Provider::modifySeparator()
      */
-    public function modifySeparator(IntlDateFormatter $intl, $best_match, $separator)
+    public function modifySeparator(IntlDateFormatter $intl, int $best_match, string $separator) : string
     {
         if (   $best_match != Ranger::MONTH
             || $intl->getDateType() < IntlDateFormatter::MEDIUM) {

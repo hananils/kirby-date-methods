@@ -11,11 +11,10 @@ use IntlDateFormatter;
 interface Provider
 {
     /**
-     *
      * @param IntlDateFormatter $intl
      * @param int $best_match
      * @param string $separator
      * @return string
      */
-    public function modifySeparator(IntlDateFormatter $intl, $best_match, $separator);
+    public function modifySeparator(IntlDateFormatter $intl, int $best_match, string $separator) : string;
 }
