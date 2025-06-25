@@ -2,6 +2,9 @@
 
 Date Methods is a plugin for [Kirby](https://getkirby.com) that allows for advanced date and time parsing and formatting using PHP's core date objects. It offers methods for fields to handle single dates, methods for pages to handle multiple dates (ranges) and also provides helper functions to simplify working with dates and times in general.
 
+> [!NOTE]
+> Please check out the online documentation at [kirby.hananils.de/plugins/date-methods](https://kirby.hananils.de/plugins/date-methods) for further information.
+
 ## Overview
 
 There are four types of methods:
