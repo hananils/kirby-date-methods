@@ -354,8 +354,8 @@ Kirby::plugin('hananils/date-methods', [
          * date or an array of fields containing the end date and time.
          */
         'toDateRange' => function (
-            array $fieldStart = ['start', 'starttime'],
-            array $fieldEnd = ['end', 'endtime']
+            array|string $fieldStart = ['start', 'starttime'],
+            array|string $fieldEnd = ['end', 'endtime']
         ): string {
             if (is_array($fieldStart)) {
                 $start = $this->content()
