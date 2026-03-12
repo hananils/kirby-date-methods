@@ -4,17 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8353d4e334a9604aa595127a111bced4
+class ComposerStaticInit29e81e3723d1bdaf6667b80983e6b6ba
 {
     public static $prefixLengthsPsr4 = array (
-        'O' => 
+        'O' =>
         array (
             'OpenPsa\\Ranger\\' => 15,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'OpenPsa\\Ranger\\' => 
+        'OpenPsa\\Ranger\\' =>
         array (
             0 => __DIR__ . '/..' . '/openpsa/ranger/src',
         ),
@@ -27,9 +27,9 @@ class ComposerStaticInit8353d4e334a9604aa595127a111bced4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8353d4e334a9604aa595127a111bced4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8353d4e334a9604aa595127a111bced4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8353d4e334a9604aa595127a111bced4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit29e81e3723d1bdaf6667b80983e6b6ba::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit29e81e3723d1bdaf6667b80983e6b6ba::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit29e81e3723d1bdaf6667b80983e6b6ba::$classMap;
 
         }, null, ClassLoader::class);
     }
