@@ -3,7 +3,7 @@
     "description": "Parsing and formatting dates can be difficult, especially if you deal with multilingual content. Date Methods aims to simplify date output by providing page and field methods to handle points in time as well as date ranges accurately in your snippets and templates.",
     "license": "MIT",
     "type": "kirby-plugin",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "authors": [
         {
             "name": "hana+nils · Büro für Gestaltung",
