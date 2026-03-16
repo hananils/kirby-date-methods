@@ -163,7 +163,10 @@ Kirby::plugin('hananils/date-methods', [
             ?string $pattern = ''
         ): string {
             if (kirby()->language()) {
-                $locale = kirby()->language()->locale();
+                $locale =
+                    kirby()
+                        ->language()
+                        ->locale(LC_ALL) ?? 'en';
             } else {
                 $locale = option('locale', 'en');
             }
