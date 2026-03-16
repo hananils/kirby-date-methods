@@ -13,9 +13,13 @@
     "homepage": "https://kirby.hananils.de/plugins/date-methods",
     "require": {
         "php": "^8.2",
+        "getkirby/composer-installer": "^1.2",
         "openpsa/ranger": "^0.6.0"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "getkirby/composer-installer": true
+        }
     }
 }

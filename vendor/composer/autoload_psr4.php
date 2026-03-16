@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'OpenPsa\\Ranger\\' => array($vendorDir . '/openpsa/ranger/src'),
+    'Kirby\\' => array($vendorDir . '/getkirby/composer-installer/src'),
 );

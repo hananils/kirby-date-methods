@@ -11,12 +11,20 @@ class ComposerStaticInit29e81e3723d1bdaf6667b80983e6b6ba
         array (
             'OpenPsa\\Ranger\\' => 15,
         ),
+        'K' =>
+        array (
+            'Kirby\\' => 6,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'OpenPsa\\Ranger\\' =>
         array (
             0 => __DIR__ . '/..' . '/openpsa/ranger/src',
+        ),
+        'Kirby\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
     );
 
