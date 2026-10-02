@@ -13,52 +13,52 @@ Date Methods are available as page and field methods depending on their context.
 
 Parser methods read the field value and convert it to PHP date and time objects like `DateTime`, `DateTimeImmutable` or `DateInterval`.
 
-- [ `$field->toDateTime()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-date-time)
-- [ `$field->toDateTimeImmutable()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-date-time-immutable)
-- [ `$field->toDateInterval()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-date-interval)
-- [ `$field->toDateDiff()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-date-diff)
+- [ `$field->toDateTime()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-date-time)
+- [ `$field->toDateTimeImmutable()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-date-time-immutable)
+- [ `$field->toDateInterval()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-date-interval)
+- [ `$field->toDateDiff()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-date-diff)
 
-- [ `$page->toDatePeriod()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/page-methods#to-date-period)
-- [ `$page->toDates()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/page-methods#to-dates)
+- [ `$page->toDatePeriod()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/page-methods#to-date-period)
+- [ `$page->toDates()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/page-methods#to-dates)
 
 ### Modify dates
 
 Modifier methods allow to round times or adjust dates to the current day, month or year:
 
-- [ `$field->toCurrentYear()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-current-year)
-- [ `$field->toCurrentMonth()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-current-month)
-- [ `$field->toCurrentDay()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-current-day)
+- [ `$field->toCurrentYear()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-current-year)
+- [ `$field->toCurrentMonth()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-current-month)
+- [ `$field->toCurrentDay()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-current-day)
 
 Additionally, Date Methods provides the following helpers to modify date and times:
 
-- [ `dateRounded()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#date-rounded)
-- [ `normalizeDate()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#normalize-date)
-- [ `normalizeTime()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#normalize-time)
+- [ `dateRounded()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#date-rounded)
+- [ `normalizeDate()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#normalize-date)
+- [ `normalizeTime()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#normalize-time)
 
 ### Format dates
 
 Formatter field and page methods take a field value and convert it to a formatted and localized string, either absolute or relative.
 
-- [ `$field->toFormatted()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-formatted)
-- [ `$field->toFormattedPattern()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-formatted-pattern)
-- [ `$field->toRelative()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-relative)
-- [ `$field->toTime()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-time)
-- [ `$field->toAge()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#to-age)
+- [ `$field->toFormatted()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-formatted)
+- [ `$field->toFormattedPattern()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-formatted-pattern)
+- [ `$field->toRelative()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-relative)
+- [ `$field->toTime()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-time)
+- [ `$field->toAge()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#to-age)
 
-- [ `$page->toDateRange()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/page-methods#to-date-range)
+- [ `$page->toDateRange()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/page-methods#to-date-range)
 
 In addition to the field methods, the following helpers are available:
 
-- [ `dateFormatted()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#date-formatted)
-- [ `dateRelative()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#date-relative)
-- [ `dateRange()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/helpers#date-range)
+- [ `dateFormatted()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#date-formatted)
+- [ `dateRelative()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#date-relative)
+- [ `dateRange()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/helpers#date-range)
 
 ### Validate dates
 
 The plugin offers two methods to validate if a date is ealier or later than a reference date:
 
-- [ `$field->isEarlierThan()`](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#is-earlier-than)
-- [ `$field->isLaterThan()` ](https://kirby.hananils.test/plugins/date-methods/3.2.0/field-methods#is-later-than)
+- [ `$field->isEarlierThan()`](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#is-earlier-than)
+- [ `$field->isLaterThan()` ](https://kirby.hananils.de/plugins/date-methods/3.2.1/field-methods#is-later-than)
 
 Both method accept an optional flag to check for equality as well.
 
